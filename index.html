@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scalable Portfolio Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="logo">SC</div>
+<h2>Scalable</h2>
+<p>Portfolio Dashboard</p>
+<div class="sidebar-note">Local CSV analysis<br>No upload<br>No installation</div>
+</aside>
+
+<main class="main-content">
+<header class="topbar">
+<div>
+<h1>My Scalable Portfolio</h1>
+<p id="fileInfo" class="muted">Import your Scalable CSV</p>
+</div>
+<label class="upload-button">Import Scalable CSV
+<input id="fileInput" type="file" accept=".csv,text/csv">
+</label>
+</header>
+
+<section class="panel">
+<h2>Portfolio filters</h2>
+<div class="filter-grid">
+<div>
+<label>Stock / Company</label>
+<select id="stockFilter"><option value="">All stocks</option></select>
+</div>
+<div>
+<label>Current price €</label>
+<input id="currentPrice" type="number" step="0.01" min="0" placeholder="Enter current price" disabled>
+</div>
+<div>
+<label>Transaction type</label>
+<select id="typeFilter"><option value="">All types</option></select>
+</div>
+<div>
+<label>Status</label>
+<select id="statusFilter"><option value="">All statuses</option></select>
+</div>
+<div>
+<label>From</label>
+<input id="fromDate" type="date">
+</div>
+<div>
+<label>To</label>
+<input id="toDate" type="date">
+</div>
+<div class="filter-buttons">
+<button id="applyBtn" class="button-dark">Apply</button>
+<button id="resetBtn" class="button-secondary">Reset</button>
+</div>
+</div>
+</section>
+
+<section class="cards">
+    <div class="card"><span>Trading realized P/L</span><strong id="portfolioTradingPL">—</strong></div>
+    <div class="card"><span>Distributions</span><strong id="portfolioDistributions">—</strong></div>
+    <div class="card"><span>Tax refunds</span><strong id="portfolioTaxRefunds">—</strong></div>
+    <div class="card"><span>Historical realized total</span><strong id="portfolioRealized">—</strong></div>
+    <div class="card"><span>Priced holdings value</span><strong id="portfolioMarketValue">—</strong></div>
+    <div class="card"><span>Estimated total P/L</span><strong id="portfolioTotalPL">—</strong></div>
+</section>
+
+<section class="cards">
+<div class="card"><span>Transactions</span><strong id="mRows">—</strong></div>
+<div class="card"><span>Total invested</span><strong id="mInvested">—</strong></div>
+<div class="card"><span>Total sold</span><strong id="mSold">—</strong></div>
+<div class="card"><span>Realized P/L</span><strong id="mRealized">—</strong></div>
+<div class="card"><span>Unrealized P/L</span><strong id="mUnrealized">—</strong></div>
+<div class="card"><span>Total P/L</span><strong id="mTotalPL">—</strong></div>
+</section>
+
+<section class="panel">
+<h2>Current position</h2>
+<p id="positionHint" class="muted small-text">Select one stock and enter its current price.</p>
+<div class="position-grid">
+<div><span>Shares held</span><strong id="pShares">—</strong></div>
+<div><span>Current avg cost</span><strong id="pAvgCost">—</strong></div>
+<div><span>Break-even price</span><strong id="pBreakEven">—</strong></div>
+<div><span>Current price</span><strong id="pCurrentPrice">—</strong></div>
+<div><span>Current market value</span><strong id="pMarketValue">—</strong></div>
+<div><span>Unrealized return</span><strong id="pUnrealizedReturn">—</strong></div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Selected stock summary</h2>
+<div id="stockSummary" class="key-value">
+<div class="muted">Import data and select a stock.</div><div></div>
+</div>
+</section>
+
+<label class="switch-row">
+    <input type="checkbox" id="hideClosed">
+    <span class="switch"></span>
+    <span>Hide closed positions</span>
+</label>
+
+<section class="panel">
+<h2>All stocks summary</h2>
+<p class="muted small-text">One row per ISIN. Enter current prices directly in the table if needed.</p>
+<div id="allStocksTable" class="table-wrap all-stocks-table">
+<div class="note">No CSV loaded.</div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Filtered transactions</h2>
+<div id="dataTable" class="table-wrap">
+<div class="note">No CSV loaded.</div>
+</div>
+</section>
+</main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
