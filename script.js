@@ -365,7 +365,9 @@ function buildAllStocksSummary(){
         <td class="${a.realized>=0?"good":"bad"}"><b>${money(a.realized)}</b></td>
         <td class="${a.distributions>=0?"good":"bad"}">${money(a.distributions)}</td>
         <td><b>${x.be===null?"—":x.be===0?"Already profitable":money(x.be)}</b></td>
-        <td><input class="price-input-small" type="number" min="0" step="0.01" data-isin="${esc(x.isin)}" value="${x.price>0?x.price:""}" placeholder="Price"></td>
+        <td>
+    ${x.price>0?money(x.price):"—"}
+</td>
         <td>${x.market===null?"—":money(x.market)}</td>
         <td class="${x.unrealized===null?"":x.unrealized>=0?"good":"bad"}">${x.unrealized===null?"—":`<b>${money(x.unrealized)}</b>`}</td>
         <td class="${x.total>=0?"good":"bad"}"><b>${money(x.total)}</b></td>
@@ -374,15 +376,6 @@ function buildAllStocksSummary(){
     });
 
     $("allStocksTable").innerHTML=html+"</tbody></table>";
-
-    document.querySelectorAll(".price-input-small").forEach(i=>i.addEventListener("change",e=>{
-        const isin=e.target.dataset.isin,p=num(e.target.value);
-        if(p>0)currentPrices[isin]=p;else delete currentPrices[isin];
-        if($("stockFilter").value===isin)$("currentPrice").value=p>0?p:"";
-        updateDashboard();
-        updatePortfolioSummary();
-        buildAllStocksSummary();
-    }));
 }
 
 function updatePortfolioSummary(){
