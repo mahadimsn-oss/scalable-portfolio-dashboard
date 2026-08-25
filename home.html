@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Savings Benefit Report</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f4f6f8;--card:#fff;--line:#dfe4e8;--text:#18212a;--muted:#6f7b86;--dark:#111820;--green:#e8f4e2;--greenText:#2f6526;--red:#b42318}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+main{max-width:1500px;margin:auto;padding:20px}
+h1{margin:0;font-size:28px}
+.subtitle{margin:5px 0 0;color:var(--muted);font-size:13px}
+.panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel h2{margin:0 0 14px;font-size:18px}
+.months{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.month-card{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.month-header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 11px;background:#f8fafb;border-bottom:1px solid var(--line)}
+.month-header strong{font-size:14px}
+.rate{font-size:10px;color:var(--muted);white-space:nowrap}
+.rate b{color:var(--text)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:8px;border-bottom:1px solid #edf0f2;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{background:#fafbfc;color:var(--muted);font-size:10px}
+.benefit{background:var(--green);color:var(--greenText);font-weight:700}
+.paid{color:var(--red)}
+.month-total td{background:#f7f9fa;font-weight:700}
+.summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.summary-card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px}
+.summary-card span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+.summary-card strong{font-size:21px}
+.summary-table{margin-top:14px;font-size:13px}
+.summary-table th,.summary-table td{padding:10px}
+.total-row td{font-weight:800;background:#f7f9fa}
+.highlight{color:var(--greenText);font-weight:700}
+@media(max-width:900px){
+    main{padding:14px}
+    .summary-cards{grid-template-columns:repeat(2,1fr)}
+    .months{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+}
+@media(max-width:600px){
+    h1{font-size:22px}
+    .panel{padding:12px;border-radius:10px}
+    .summary-cards{grid-template-columns:1fr 1fr;gap:8px}
+    .summary-card{padding:11px}
+    .summary-card strong{font-size:17px}
+    .months{display:block}
+    .month-card{margin-bottom:10px}
+    .month-header{padding:9px 10px}
+    table{font-size:11px}
+    th,td{padding:7px 6px}
+    .summary-table{display:block;overflow-x:auto}
+}
+@media(max-width:390px){
+    main{padding:10px}
+    .summary-cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Savings Benefit Report</h1>
+<p class="subtitle">Benefit is calculated monthly from savings. July 2026 starts from 15 July, so only 17 of 31 days are counted.</p>
+
+<section class="panel">
+<h2>Monthly breakdown</h2>
+<div id="months" class="months"></div>
+</section>
+
+<section class="panel">
+<h2>Overall summary</h2>
+
+<div class="summary-cards">
+<div class="summary-card"><span>Current total savings</span><strong id="totalSavings">—</strong></div>
+<div class="summary-card"><span>Total benefit earned</span><strong id="totalBenefit">—</strong></div>
+<div class="summary-card"><span>Total benefit paid</span><strong id="totalPaid">—</strong></div>
+<div class="summary-card"><span>Benefit remaining</span><strong id="remainingBenefit">—</strong></div>
+</div>
+
+<table class="summary-table">
+<thead>
+<tr>
+<th>Person</th>
+<th>Current savings</th>
+<th>Benefit earned</th>
+<th>Benefit paid</th>
+<th>Benefit remaining</th>
+<th>Total value</th>
+</tr>
+</thead>
+<tbody id="summaryBody"></tbody>
+</table>
+
+</section>
+
+</main>
+
+<script>
+const people=["Person A","Person B","Person C","Person D"];
+
+const reportData=[
+["Jul 2026",1100,[200000,200000,15000,15000],[0,0,0,0]],
+["Aug 2026",1100,[300000,200000,15000,15000],[0,0,0,0]],
+["Sep 2026",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Oct 2026",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Nov 2026",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Dec 2026",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Jan 2027",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Feb 2027",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Mar 2027",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Apr 2027",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["May 2027",1100,[210000,200000,15000,15000],[0,0,0,0]],
+["Jun 2027",1100,[210000,200000,15000,15000],[0,0,0,0]]
+];
+
+const $=id=>document.getElementById(id);
+const number=n=>new Intl.NumberFormat("en-US",{maximumFractionDigits:0}).format(Math.round(n));
+const money=n=>number(n)+" BDT";
+
+function monthIndex(month){
+    const [name,year]=month.split(" ");
+    const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return Number(year)*12+months.indexOf(name);
+}
+
+function visibleData(){
+    const now=new Date();
+    const current=now.getFullYear()*12+now.getMonth();
+    const start=2026*12+6;
+    return reportData.filter(r=>{
+        const m=monthIndex(r[0]);
+        return m>=start&&m<=current;
+    });
+}
+
+function benefitFor(month,rate,saving){
+    let benefit=saving/100000*rate;
+    if(month==="Jul 2026")benefit*=0.5;
+    return benefit;
+}
+
+function render(){
+    const data=visibleData();
+
+    $("months").innerHTML=data.map(([month,rate,savings,paid])=>{
+        const benefits=savings.map((v,i)=>benefitFor(month,rate,v));
+        const savingsTotal=savings.reduce((a,b)=>a+b,0);
+        const benefitTotal=benefits.reduce((a,b)=>a+b,0);
+        const paidTotal=paid.reduce((a,b)=>a+b,0);
+        const remaining=benefitTotal-paidTotal;
+
+        return `
+        <div class="month-card">
+            <div class="month-header">
+                <strong>${month}</strong>
+                <span class="rate"><b>${number(rate)}</b> per 1 Lakh</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th>Savings</th>
+                        <th>Benefit</th>
+                        <th>Paid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${people.map((p,i)=>`
+                        <tr>
+                            <td>${p}</td>
+                            <td>${number(savings[i])}</td>
+                            <td class="benefit">${number(benefits[i])}</td>
+                            <td class="paid">${paid[i]?number(paid[i]):"—"}</td>
+                        </tr>
+                    `).join("")}
+                    <tr class="month-total">
+                        <td>Total</td>
+                        <td>${number(savingsTotal)}</td>
+                        <td>${number(benefitTotal)}</td>
+                        <td>${number(paidTotal)}</td>
+                    </tr>
+                    <tr class="month-total">
+                        <td colspan="3">Benefit remaining</td>
+                        <td class="highlight">${number(remaining)}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+    }).join("");
+
+    if(!data.length){
+        $("months").innerHTML='<div class="subtitle">No report data available yet.</div>';
+        return;
+    }
+
+    const persons=people.map((_,i)=>{
+        const currentSavings=data.at(-1)[2][i];
+        const earned=data.reduce((s,[month,rate,savings])=>s+benefitFor(month,rate,savings[i]),0);
+        const paid=data.reduce((s,m)=>s+(m[3][i]||0),0);
+        const remaining=earned-paid;
+        return{currentSavings,earned,paid,remaining};
+    });
+
+    const totalSavings=persons.reduce((s,p)=>s+p.currentSavings,0);
+    const totalBenefit=persons.reduce((s,p)=>s+p.earned,0);
+    const totalPaid=persons.reduce((s,p)=>s+p.paid,0);
+    const remainingBenefit=totalBenefit-totalPaid;
+
+    $("totalSavings").textContent=money(totalSavings);
+    $("totalBenefit").textContent=money(totalBenefit);
+    $("totalPaid").textContent=money(totalPaid);
+    $("remainingBenefit").textContent=money(remainingBenefit);
+
+    $("summaryBody").innerHTML=
+        people.map((p,i)=>`
+        <tr>
+            <td>${p}</td>
+            <td>${money(persons[i].currentSavings)}</td>
+            <td class="benefit">${money(persons[i].earned)}</td>
+            <td class="paid">${money(persons[i].paid)}</td>
+            <td class="highlight">${money(persons[i].remaining)}</td>
+            <td><b>${money(persons[i].currentSavings+persons[i].remaining)}</b></td>
+        </tr>`).join("")+
+        `<tr class="total-row">
+            <td>Total</td>
+            <td>${money(totalSavings)}</td>
+            <td>${money(totalBenefit)}</td>
+            <td>${money(totalPaid)}</td>
+            <td>${money(remainingBenefit)}</td>
+            <td>${money(totalSavings+remainingBenefit)}</td>
+        </tr>`;
+}
+
+render();
+</script>
+</body>
+</html>
