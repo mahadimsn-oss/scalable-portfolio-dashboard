@@ -29,30 +29,12 @@
 <section class="panel">
 <h2>Portfolio filters</h2>
 <div class="filter-grid">
-<div>
-<label>Stock / Company</label>
-<select id="stockFilter"><option value="">All stocks</option></select>
-</div>
-<div>
-<label>Current price €</label>
-<input id="currentPrice" type="number" step="0.01" min="0" placeholder="Enter current price" disabled>
-</div>
-<div>
-<label>Transaction type</label>
-<select id="typeFilter"><option value="">All types</option></select>
-</div>
-<div>
-<label>Status</label>
-<select id="statusFilter"><option value="">All statuses</option></select>
-</div>
-<div>
-<label>From</label>
-<input id="fromDate" type="date">
-</div>
-<div>
-<label>To</label>
-<input id="toDate" type="date">
-</div>
+<div><label>Stock / Company</label><select id="stockFilter"><option value="">All stocks</option></select></div>
+<div><label>Current price €</label><input id="currentPrice" type="number" step="0.01" min="0" placeholder="Enter current price" disabled></div>
+<div><label>Transaction type</label><select id="typeFilter"><option value="">All types</option></select></div>
+<div><label>Status</label><select id="statusFilter"><option value="">All statuses</option></select></div>
+<div><label>From</label><input id="fromDate" type="date"></div>
+<div><label>To</label><input id="toDate" type="date"></div>
 <div class="filter-buttons">
 <button id="applyBtn" class="button-dark">Apply</button>
 <button id="resetBtn" class="button-secondary">Reset</button>
@@ -61,12 +43,12 @@
 </section>
 
 <section class="cards">
-    <div class="card"><span>Trading realized P/L</span><strong id="portfolioTradingPL">—</strong></div>
-    <div class="card"><span>Distributions</span><strong id="portfolioDistributions">—</strong></div>
-    <div class="card"><span>Tax refunds</span><strong id="portfolioTaxRefunds">—</strong></div>
-    <div class="card"><span>Historical realized total</span><strong id="portfolioRealized">—</strong></div>
-    <div class="card"><span>Priced holdings value</span><strong id="portfolioMarketValue">—</strong></div>
-    <div class="card"><span>Estimated total P/L</span><strong id="portfolioTotalPL">—</strong></div>
+<div class="card"><span>Trading realized P/L</span><strong id="portfolioTradingPL">—</strong></div>
+<div class="card"><span>Distributions</span><strong id="portfolioDistributions">—</strong></div>
+<div class="card"><span>Tax refunds</span><strong id="portfolioTaxRefunds">—</strong></div>
+<div class="card"><span>Historical realized total</span><strong id="portfolioRealized">—</strong></div>
+<div class="card"><span>Priced holdings value</span><strong id="portfolioMarketValue">—</strong></div>
+<div class="card"><span>Estimated total P/L</span><strong id="portfolioTotalPL">—</strong></div>
 </section>
 
 <section class="cards">
@@ -100,68 +82,37 @@
 </section>
 
 <section class="panel">
-
 <div class="summary-header">
-
-    <div>
-        <h2>All stocks summary</h2>
-        <p class="muted small-text">One row per ISIN.</p>
-    </div>
-
-    <label class="toggle-control">
-        <input type="checkbox" id="hideClosed" checked>
-        <span class="toggle-slider"></span>
-        <span>Hide closed positions</span>
-    </label>
-
+<div>
+<h2>All stocks summary</h2>
+<p class="muted small-text">One row per ISIN.</p>
+</div>
+<label class="toggle-control">
+<input type="checkbox" id="hideClosed" checked>
+<span class="toggle-slider"></span>
+<span>Hide closed positions</span>
+</label>
 </div>
 
 <div class="price-editor">
+<div class="price-editor-header">
+<div>
+<strong>Current prices</strong>
+<span class="muted">Only currently held stocks are listed.</span>
+</div>
+<div class="price-actions">
+<button id="applyPricesBtn" class="button-dark">Apply prices</button>
+<button id="clearPricesBtn" class="button-secondary">Clear</button>
+</div>
+</div>
 
-    <div class="price-editor-header">
-
-        <div>
-            <strong>Current prices</strong>
-            <span class="muted">Only currently held stocks are listed.</span>
-        </div>
-
-        <div class="price-actions">
-
-            <button id="applyPricesBtn" class="button-dark">
-                Apply prices
-            </button>
-
-            <button id="clearPricesBtn" class="button-secondary">
-                Clear
-            </button>
-
-        </div>
-
-    </div>
-
-    <textarea
-        id="priceTextarea"
-        class="price-textarea"
-        placeholder="Import your CSV first..."
-    ></textarea>
-
-    <div id="priceMessage" class="price-message"></div>
-
+<textarea id="priceTextarea" class="price-textarea" placeholder="Import your CSV first..."></textarea>
+<div id="priceMessage" class="price-message"></div>
 </div>
 
 <div id="allStocksTable" class="table-wrap all-stocks-table">
-    <div class="note">No CSV loaded.</div>
-</div>
-
-</section>
-
-<section class="panel">
-<h2>Filtered transactions</h2>
-
-<div id="dataTable" class="table-wrap">
 <div class="note">No CSV loaded.</div>
 </div>
-
 </section>
 
 <section class="panel">
@@ -170,6 +121,7 @@
 <div class="note">No CSV loaded.</div>
 </div>
 </section>
+
 </main>
 </div>
 <script src="script.js"></script>
