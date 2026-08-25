@@ -94,18 +94,15 @@
 <section class="panel">
 <h2>Selected stock summary</h2>
 <div id="stockSummary" class="key-value">
-<div class="muted">Import data and select a stock.</div><div></div>
+<div class="muted">Import data and select a stock.</div>
+<div></div>
 </div>
 </section>
 
-<label class="switch-row">
-    <input type="checkbox" id="hideClosed">
-    <span class="switch"></span>
-    <span>Hide closed positions</span>
-</label>
 <section class="panel">
 
 <div class="summary-header">
+
     <div>
         <h2>All stocks summary</h2>
         <p class="muted small-text">One row per ISIN.</p>
@@ -116,17 +113,20 @@
         <span class="toggle-slider"></span>
         <span>Hide closed positions</span>
     </label>
+
 </div>
 
 <div class="price-editor">
 
     <div class="price-editor-header">
+
         <div>
             <strong>Current prices</strong>
             <span class="muted">Only currently held stocks are listed.</span>
         </div>
 
         <div class="price-actions">
+
             <button id="applyPricesBtn" class="button-dark">
                 Apply prices
             </button>
@@ -134,7 +134,9 @@
             <button id="clearPricesBtn" class="button-secondary">
                 Clear
             </button>
+
         </div>
+
     </div>
 
     <textarea
@@ -152,13 +154,14 @@
 </div>
 
 </section>
-    
+
 <section class="panel">
-<h2>All stocks summary</h2>
-<p class="muted small-text">One row per ISIN. Enter current prices directly in the table if needed.</p>
-<div id="allStocksTable" class="table-wrap all-stocks-table">
+<h2>Filtered transactions</h2>
+
+<div id="dataTable" class="table-wrap">
 <div class="note">No CSV loaded.</div>
 </div>
+
 </section>
 
 <section class="panel">
