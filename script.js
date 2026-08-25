@@ -444,6 +444,8 @@ function updateEverything(){
     updatePortfolioSummary();
 }
 
+$("applyPricesBtn").addEventListener("click",applyPricesFromTextarea);
+$("clearPricesBtn").addEventListener("click",clearCurrentPrices);
 $("applyBtn").addEventListener("click",updateEverything);
 $("hideClosed").addEventListener("change",buildAllStocksSummary);
 $("stockFilter").addEventListener("change",()=>{
@@ -451,6 +453,7 @@ $("stockFilter").addEventListener("change",()=>{
     $("currentPrice").disabled=!s;
     $("currentPrice").value=s&&currentPrices[s]?currentPrices[s]:"";
     updateEverything();
+    refreshPriceTextarea();
 });
 $("currentPrice").addEventListener("change",()=>{
     const s=$("stockFilter").value;
@@ -494,7 +497,93 @@ $("fileInput").addEventListener("change",e=>{
 
         populateFilters();
         updateEverything();
+        refreshPriceTextarea();
     };
 
     reader.readAsText(file);
 });
+function refreshPriceTextarea(){
+    if(!rows.length){
+        $("priceTextarea").value="";
+        return;
+    }
+
+    const stocks=getStockInfo();
+    const lines=[];
+
+    for(const stock of stocks.values()){
+        const a=analysisFor(stock.isin);
+        if(a.remainingShares<=1e-8)continue;
+
+        const price=currentPrices[stock.isin]??"";
+        const name=stock.description||stock.isin;
+
+        lines.push(`${name} [${stock.isin}] = ${price}`);
+    }
+
+    lines.sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"}));
+    $("priceTextarea").value=lines.join("\n");
+}
+
+function applyPricesFromTextarea(){
+    const lines=$("priceTextarea").value.split(/\r?\n/);
+    let updated=0,invalid=0;
+
+    lines.forEach(line=>{
+        if(!line.trim())return;
+
+        const match=line.match(/\[([^\]]+)\]\s*=\s*(.*)$/);
+
+        if(!match){
+            invalid++;
+            return;
+        }
+
+        const isin=match[1].trim();
+        const raw=match[2].trim();
+
+        if(!raw){
+            delete currentPrices[isin];
+            return;
+        }
+
+        const price=num(raw);
+
+        if(price>0){
+            currentPrices[isin]=price;
+            updated++;
+        }else{
+            invalid++;
+        }
+    });
+
+    const selected=$("stockFilter").value;
+
+    if(selected){
+        $("currentPrice").value=
+            currentPrices[selected]??"";
+    }
+
+    updateDashboard();
+    updatePortfolioSummary();
+    buildAllStocksSummary();
+
+    $("priceMessage").textContent=
+        invalid
+            ? `${updated} prices applied, ${invalid} invalid line(s).`
+            : `${updated} prices applied.`;
+}
+
+function clearCurrentPrices(){
+    Object.keys(currentPrices).forEach(k=>delete currentPrices[k]);
+
+    refreshPriceTextarea();
+
+    $("currentPrice").value="";
+
+    updateDashboard();
+    updatePortfolioSummary();
+    buildAllStocksSummary();
+
+    $("priceMessage").textContent="Current prices cleared.";
+}
